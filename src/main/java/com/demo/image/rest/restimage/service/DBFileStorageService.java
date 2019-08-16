@@ -4,6 +4,8 @@ import com.demo.image.rest.restimage.exception.FileStorageException;
 import com.demo.image.rest.restimage.exception.MyFileNotFoundException;
 import com.demo.image.rest.restimage.model.DBFile;
 import com.demo.image.rest.restimage.repository.DBFileRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -17,6 +19,8 @@ public class DBFileStorageService {
     @Autowired
     private DBFileRepository dbFileRepository;
 
+    private static final Logger log = LoggerFactory.getLogger(DBFileStorageService.class);
+
     public DBFile storeFile(MultipartFile file){
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
 
@@ -24,6 +28,9 @@ public class DBFileStorageService {
             if (fileName.contains("..")){
                 throw new FileStorageException("Sorry! Filename contains invalid path sequence "+fileName);
             }
+
+            /**/
+            log.info("DBFileStorageService.storeFile => File Data in Bytes [" + file.getBytes() + "]");
 
             DBFile dbFile = new DBFile(fileName,file.getContentType(),file.getBytes());
 

@@ -1,5 +1,7 @@
 package com.demo.image.rest.restimage.controller;
 
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +23,7 @@ public class HomeController {
     public ResponseEntity<Object> uploadFile(@RequestParam("file") MultipartFile file) {
 
         try {
-            File convertFile = new File("C:\\Demo Data Dump\\" + file.getOriginalFilename());
+            File convertFile = new File("C:\\ADI\\" + file.getOriginalFilename());
             convertFile.createNewFile();
             FileOutputStream fileOutputStream = new FileOutputStream(convertFile);
             fileOutputStream.write(file.getBytes());
@@ -36,5 +38,14 @@ public class HomeController {
             return new ResponseEntity<>("Something Went Wrong", HttpStatus.CONFLICT);
 
         }
+    }
+
+    //check this
+    @RequestMapping(value = "/uploadBytes", method = RequestMethod.POST)
+    public ResponseEntity<Resource> uploadBytes(@RequestParam("file") byte[] data) {
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType("image/jpeg"))
+                //.header(HttpHeaders.CONTENT_TYPE,"")
+                .body(new ByteArrayResource(data));
     }
 }
